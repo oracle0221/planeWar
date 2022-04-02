@@ -4,7 +4,7 @@ import {getOffCanvas} from './common';
 import {bg_move0, bg_move2} from './bg';
 import {Generate_particle, particle_move} from './particle';
 import {plane1_move} from './plane';
-import {E_A_NUM, E_C_NUM, enemy_generate, enemy_move1, enemy_explode, enemy_generate_C, enemy_move2} from './enemy';
+import {E_A_NUM, E_C_NUM, enemy_generate, enemy_move1, enemy_explode, enemy_generate_C, enemy_move2, enemyC_explode} from './enemy';
 import {enemy_bullet_generateB, enemy_bullet_moveB, enemy_bullet_generate, enemy_bullet_move} from './enemy_bullet';
 import {bullet1_move, plane_bullet_hit_enemy} from './bullet';
 
@@ -45,6 +45,7 @@ export function draw(){
 			
 			//===enemy explode===//
 			enemy_explode();
+			enemyC_explode();
 			
 			//===敌人出场的顺序===//
 			switch (E_appearance_sequence){

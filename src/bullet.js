@@ -1,5 +1,5 @@
 import config from './config';
-import {E_A_NUM, E_A} from './enemy';
+import {E_A_NUM, E_A, E_C_NUM, E_C} from './enemy';
 import {loadImage, Point} from './common';
 import {gd} from './render';
 
@@ -138,6 +138,41 @@ export function plane_bullet_hit_enemy(){
 						}
 						
 					} // for k over
+				}
+				
+				if( p_bulletA[i].exist == 0 ){
+					break;
+				}
+				
+			} // for j over
+			
+		}
+		
+		//--是否击中盾2(圆形)--//
+		if(p_bulletA[i].exist==1){	//飞机子弹存在
+			
+			for( let j = 0; j < E_C_NUM; j ++ ){
+				
+				if(E_C[j].exist==1){  //敌人存在
+					
+					for( let k = 0; k < 8; k ++ ){
+						
+						if(
+								( p_bulletA[i].p[k].x > E_C[j].x )	&&
+								( p_bulletA[i].p[k].x < E_C[j].x + E_C[j].w) &&
+								( p_bulletA[i].p[k].y > E_C[j].y ) &&
+								( p_bulletA[i].p[k].y < E_C[j].y + E_C[j].h)
+						  ){
+                    		E_C[j].exist=0;	
+							E_C[j].dead=1;	
+							p_bulletA[i].exist=0;
+                     		config.E_A_count--;
+							config.score++;
+							break;
+						}
+						
+					} // for k over
+					
 				}
 				
 				if( p_bulletA[i].exist == 0 ){

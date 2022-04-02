@@ -223,6 +223,7 @@ export function enemy_generate_C(){
 			 E_C[i].px		=0;
 			 E_C[i].py		=0;
 			 E_C[i].dead	=0;
+			 E_C[i].explode_delay	=0;
 			 angle += 0.2; // 弧度增加
 			 config.E_A_count ++;
 		}
@@ -263,4 +264,52 @@ export function enemy_move2(){
 		} // if( E_C[i].exist == 1 )
 		
 	} // for i over
+}
+
+//--盾敌人圆形--//
+export function enemyC_explode(){
+	
+	for( let i = 0; i < E_C_NUM; i ++ ){
+		
+		//--盾2--//
+	     if(E_C[i].dead==1)
+		 {
+			E_C[i].explode_delay++;
+
+			if(E_C[i].explode_delay%2==0)
+			{
+		       if(E_C[i].explode_px<896)
+			     E_C[i].explode_px=E_C[i].explode_px+128;
+		       else
+			   {
+			       if(E_C[i].explode_py==0)
+				   {
+			         E_C[i].explode_px=0;
+			         E_C[i].explode_py=135;
+				   }
+			       else
+				   {
+			          E_C[i].explode_px=0;
+					  E_C[i].explode_py=0;
+					  E_C[i].dead=0;
+			          //E_C->explode_delay=0;
+				   }
+			   }
+
+			   gd.drawImage(
+				 E_explode[0],
+				 E_C[i].explode_px,
+				 E_C[i].explode_py,
+				 128,135,
+				 
+				 E_C[i].x,E_C[i].y,
+				 128,135
+			   );
+
+			   E_C[i].explode_delay=0;
+			}//end if(E_A->explode_delay%2==0)
+		 }//end if deade==1
+		
+	} // for i over
+	
 }
