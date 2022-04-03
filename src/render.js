@@ -4,7 +4,7 @@ import {getOffCanvas} from './common';
 import {bg_move0, bg_move2} from './bg';
 import {Generate_particle, particle_move} from './particle';
 import {plane1_move} from './plane';
-import {E_A_NUM, E_C_NUM, enemy_generate, enemy_move1, enemy_explode, enemy_generate_C, enemy_move2, enemyC_explode} from './enemy';
+import {E_A_NUM, E_C_NUM, E_B_NUM, enemy_generate, enemy_move1,enemy_move3, enemy_explode, enemy_generate_C, enemy_move2, enemyC_explode, enemy_generate_B} from './enemy';
 import {enemy_bullet_generateB, enemy_bullet_moveB, enemy_bullet_generate, enemy_bullet_move} from './enemy_bullet';
 import {bullet1_move, plane_bullet_hit_enemy} from './bullet';
 
@@ -83,6 +83,18 @@ export function draw(){
 					
 					enemy_move2();
 					
+					if(config.E_A_count==0) E_appearance_sequence=3;
+					
+				break;
+				case 3:  //飞机敌人
+				if((E_generate_now==3)&&(config.E_A_count<E_B_NUM))	//限制敌人产生的数量
+					enemy_generate_B(); 
+				else
+					E_generate_now=4;
+				
+				enemy_move3();
+				if(config.E_A_count==0) E_appearance_sequence=4;
+				
 				break;
 			}
 			

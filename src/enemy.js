@@ -1,4 +1,4 @@
-import {loadImage} from './common';
+import {loadImage, rand} from './common';
 import config from './config';
 import {gd} from './render';
 
@@ -49,8 +49,9 @@ let E_explode = [];
 let arrive	  = 0;			//走圆形路径的敌人是否全都到达集合的位置
 let diffuse	  = 0;			//扩大缩小的标志
 
-
 export let E_A = Array(E_A_NUM).fill({}).map(_=>new Enemy_data());
+
+export let E_B = Array(E_B_NUM).fill({}).map(_=>new Enemy_data());
 
 export let E_C = Array(E_C_NUM).fill({}).map(_=>new Enemy_data());
 
@@ -310,6 +311,84 @@ export function enemyC_explode(){
 			}//end if(E_A->explode_delay%2==0)
 		 }//end if deade==1
 		
+	} // for i over
+	
+}
+
+
+//--飞机敌人--//
+export function enemy_generate_B(){
+	
+	for( let i = 0; i < E_B_NUM; i ++ ){
+		if((E_B[i].exist==0)&&(E_B[i].dead==0)){
+			
+			if(i > 0){  //为了上下距离不要太近
+				E_B[i].y = E_B[i-1].y+80;
+			}else{
+				E_B[i].y=55+rand(100);
+			}
+			
+			E_B[i].x		=800+rand(100);
+			E_B[i].exist    =1;      
+			E_B[i].w		=90;
+			E_B[i].h		=70;
+			
+			E_B[i].pause   =500+rand(200)-rand(100);    //停留
+			config.E_A_count++;
+			
+			// 确定移动的形式
+			switch( rand(3) ){
+				case 0:
+					E_B[i].run_type = 1;
+				break;
+				case 1:
+					E_B[i].run_type = 2;
+				break;
+				case 2:
+					E_B[i].run_type = 3;
+				break;
+			}
+			
+			E_B[i].run_type = 1;
+			
+		} // if((E_B[i].exist==0)&&(E_B[i].dead==0))
+	} // for i over
+}
+
+//--飞机敌人  移动 --//
+export function enemy_move3(){
+	
+	for( let i = 0; i < E_B_NUM; i ++ ){
+		if((E_B[i].exist==1)&&(E_B[i].dead==0)){
+			
+			switch(E_B[i].run_type){
+				
+				case 1: //直走突然加速
+					if( E_B[i].x > E_B[i].pause ){
+						E_B[i].x -= 4;
+					}else{
+						if( E_B[i].x > -E_B[i].w ){
+							E_B[i].x -= 10;
+						}else{
+							E_B[i].exist = 0;
+							E_B[i].A_delay = 0;
+							E_B[i].px = 0;
+							config.E_A_count --;
+						}
+					}
+				break;
+				
+			}
+			
+			// 绘制飞机敌人 
+			gd.drawImage(
+				E_bitmap[1],
+				E_B[i].px,E_B[i].py, E_B[i].w,E_B[i].h,
+				E_B[i].x,E_B[i].y,E_B[i].w,E_B[i].h
+			);
+			
+			
+		} // if((E_B[i].exist==1)&&(E_B[i].dead==0))
 	} // for i over
 	
 }
