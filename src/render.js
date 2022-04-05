@@ -4,8 +4,8 @@ import {getOffCanvas} from './common';
 import {bg_move0, bg_move2} from './bg';
 import {Generate_particle, particle_move} from './particle';
 import {plane1_move} from './plane';
-import {E_A_NUM, E_C_NUM, E_B_NUM, enemy_generate, enemy_move1,enemy_move3, enemy_explode, enemy_generate_C, enemy_move2, enemyC_explode, enemy_generate_B} from './enemy';
-import {enemy_bullet_generateB, enemy_bullet_moveB, enemy_bullet_generate, enemy_bullet_move} from './enemy_bullet';
+import {E_A_NUM, E_C_NUM, E_B_NUM, E_D_NUM, enemy_generate, enemy_move1,enemy_move3, enemy_explode, enemy_generate_C, enemy_move2, enemyC_explode, enemy_generate_B, enemy_generate_D, enemy_move4} from './enemy';
+import {enemy_bullet_generateB, enemy_bullet_moveB, enemy_bullet_generate, enemy_bullet_move, enemy_bullet_generateC} from './enemy_bullet';
 import {bullet1_move, plane_bullet_hit_enemy} from './bullet';
 
 export const canvas = document.getElementById('game-canvas');
@@ -94,6 +94,20 @@ export function draw(){
 				
 				enemy_move3();
 				if(config.E_A_count==0) E_appearance_sequence=4;
+				
+				break;
+				case 4: //炮塔
+				if((E_generate_now==4)&&(config.E_A_count<E_D_NUM))	//限制敌人产生的数量
+					enemy_generate_D();
+				else
+					E_generate_now=5;
+				
+				enemy_move4();
+				enemy_bullet_generateC();
+				
+				if( config.E_A_count == 0 ){
+					E_appearance_sequence = 5;
+				}
 				
 				break;
 			}
@@ -249,6 +263,6 @@ function limpid(){
 	gd.putImageData( originPixel,  p_3[0].p_x, p_3[0].p_y );
 	
 	if( lim > 0.1 ){
-		lim -= 0.001;
+		lim -= 0.005;
 	}
 }

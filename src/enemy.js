@@ -55,6 +55,8 @@ export let E_B = Array(E_B_NUM).fill({}).map(_=>new Enemy_data());
 
 export let E_C = Array(E_C_NUM).fill({}).map(_=>new Enemy_data());
 
+export let E_D = Array(E_D_NUM).fill({}).map(_=>new Enemy_data());
+
 
 export async function enemy_bitmap_load(){
 	await Promise.all([
@@ -391,4 +393,94 @@ export function enemy_move3(){
 		} // if((E_B[i].exist==1)&&(E_B[i].dead==0))
 	} // for i over
 	
+}
+
+//===============
+//炮塔敌人的产生
+//===============
+export function enemy_generate_D(){
+	for( let i = 0; i < E_D_NUM; i ++ ){
+		if( (E_D[i].exist==0)&&(E_D[i].dead==0) ){
+			E_D[i].exist = 1;
+			
+			if( i == 0 ){
+				E_D[i].x = 800;
+			}else{
+				E_D[i].x = E_D[i-1].x + 250;
+			}
+			
+			E_D[i].y = 485;
+			
+			E_D[i].w=90;
+		    E_D[i].h=90;
+		    E_D[i].px=0;
+		    E_D[i].py=0;
+		    E_D[i].dead=0;
+		    E_D[i].A_delay=0;
+		    E_D[i].L=1;
+		    E_D[i].R=0;
+			config.E_A_count ++;
+		}
+	} // for i over
+}
+
+//===============
+//炮塔敌人的移动
+//===============
+export function enemy_move4(){
+	let j = 0;
+	for( let i = 0; i < E_D_NUM; i ++ ){
+		if((E_D[i].exist==1)&&(E_D[i].dead==0)){
+			// --- 移动
+			if(E_D[i].move_delay%3==0){
+				
+				if( E_D[i].x > -E_D[i].w ){
+					E_D[i].x -= 1;
+				}else{
+					E_D[i].exist = 0;
+					config.E_A_count --;
+				}
+				E_D[i].move_delay = 0;
+			}
+			
+			E_D[i].move_delay ++;
+			
+			// -------  以下是 跟踪 --------
+			// 左边
+			if( (  config.p_3[j].p_x < E_D[i].x ) && ( config.p_3[j].p_y<300 ) ){
+				E_D[i].px=270;
+				E_D[i].L=1;
+				E_D[i].R=0;
+			}
+			
+			if((config.p_3[j].p_x<E_D[i].x)&&(config.p_3[j].p_y>=350))
+			{
+				E_D[i].px=180;
+				E_D[i].L=1;
+				E_D[i].R=0;
+			}
+			
+			//--右边
+			if((config.p_3[j].p_x>E_D[i].x)&&(config.p_3[j].p_y<300))
+			{
+				E_D[i].px=720;
+				E_D[i].R=1;
+				E_D[i].L=0;
+			}
+
+			if((config.p_3[j].p_x>E_D[i].x)&&(config.p_3[j].p_y>=350))
+			{
+				E_D[i].px=810;
+				E_D[i].R=1;
+				E_D[i].L=0;
+			}
+			
+			// 绘画
+			gd.drawImage(
+				E_bitmap[2],
+				E_D[i].px,E_D[i].py, E_D[i].w,E_D[i].h,
+				E_D[i].x,E_D[i].y, E_D[i].w,E_D[i].h
+			);
+		}
+	} // for i over
 }

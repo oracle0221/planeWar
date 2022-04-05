@@ -251,3 +251,11 @@ export function enemy_bullet_move(){
 		
 	} // for i over
 }
+
+
+//==============
+//炮塔子弹的产生
+//==============
+export function enemy_bullet_generateC(){
+	
+}
