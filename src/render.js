@@ -1,7 +1,7 @@
 import config from './config';
 import {Dx_keyboard_control} from './dinput';
 import {getOffCanvas} from './common';
-import {bg_move0, bg_move2} from './bg';
+import {bg_move0, bg_move1, bg_move2} from './bg';
 import {Generate_particle, particle_move} from './particle';
 import {plane1_move} from './plane';
 import {E_A_NUM, E_C_NUM, E_B_NUM, E_D_NUM, enemy_generate, enemy_move1,enemy_move3, enemy_explode, enemy_generate_C, enemy_move2, enemyC_explode, enemy_generate_B, enemy_generate_D, enemy_move4} from './enemy';
@@ -15,9 +15,9 @@ export const gd = canvas.getContext('2d'); // 主画布画笔导出
 let shutter_cur = 0, shutter_frames = 16;
 
 // 敌人出场的顺序变量
-let E_appearance_sequence = 4;
+let E_appearance_sequence = 0;
 // 控制要产生哪种敌人
-let E_generate_now=4; 
+let E_generate_now=0; 
 
 export function update(){
 	Dx_keyboard_control();
@@ -127,6 +127,8 @@ export function draw(){
 			
 			//==飞机子弹击中敌人==//
 			plane_bullet_hit_enemy();
+			
+			bg_move1(); //land 小
 			
 		break;
 	}

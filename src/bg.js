@@ -65,3 +65,46 @@ export function bg_move2(){
 	}
 	bg2_delay ++;
 }
+
+
+//----背景地面(细)----//
+let		bg_1Ax=0;    
+let		bg_1Bx=797;
+let		a1=2;
+let		b1=3;
+// config.land[2], config.land[3]
+
+//------------------
+//背景地面移（细）
+//------------------
+export function bg_move1(){
+	let middle1 = 0;
+	
+	// 绘画
+	gd.drawImage(
+		config.land[a1],
+		bg_1Ax,0, 800,70,
+		0,530,800,70
+	);
+	
+	if( bg_1Ax > 0 ){
+		gd.drawImage(
+			config.land[b1],
+			0,0, 800,70,
+			bg_1Bx,530,800, 70
+		);
+	}
+	
+	if( bg_1Ax >= 797 ){
+		bg_1Ax = 0;
+		bg_1Bx = 797;
+		
+		middle1 = a1;
+		a1 = b1;
+		b1 = middle1;
+		
+	}
+	
+	bg_1Bx -= 3;
+	bg_1Ax += 3;
+}
