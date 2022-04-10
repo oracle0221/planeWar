@@ -5,7 +5,7 @@ import {bg_move0, bg_move2} from './bg';
 import {Generate_particle, particle_move} from './particle';
 import {plane1_move} from './plane';
 import {E_A_NUM, E_C_NUM, E_B_NUM, E_D_NUM, enemy_generate, enemy_move1,enemy_move3, enemy_explode, enemy_generate_C, enemy_move2, enemyC_explode, enemy_generate_B, enemy_generate_D, enemy_move4} from './enemy';
-import {enemy_bullet_generateB, enemy_bullet_moveB, enemy_bullet_generate, enemy_bullet_move, enemy_bullet_generateC} from './enemy_bullet';
+import {enemy_bullet_generateB, enemy_bullet_moveB, enemy_bullet_moveC, enemy_bullet_generate, enemy_bullet_move, enemy_bullet_generateC} from './enemy_bullet';
 import {bullet1_move, plane_bullet_hit_enemy} from './bullet';
 
 export const canvas = document.getElementById('game-canvas');
@@ -15,9 +15,9 @@ export const gd = canvas.getContext('2d'); // 主画布画笔导出
 let shutter_cur = 0, shutter_frames = 16;
 
 // 敌人出场的顺序变量
-let E_appearance_sequence = 0;
+let E_appearance_sequence = 4;
 // 控制要产生哪种敌人
-let E_generate_now=0; 
+let E_generate_now=4; 
 
 export function update(){
 	Dx_keyboard_control();
@@ -113,7 +113,7 @@ export function draw(){
 			}
 			
 			//==对象显示和移动==//
-			
+			enemy_bullet_moveC(); //炮塔子弹的移动
 			enemy_bullet_moveB(); //盾敌人散弹移动
 			enemy_bullet_move();	//盾敌人普通子弹的移动
 			

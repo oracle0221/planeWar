@@ -1,5 +1,5 @@
 import config from './config';
-import {E_A_NUM, E_A} from './enemy';
+import {E_A_NUM, E_A, E_D, E_D_NUM} from './enemy';
 import {loadImage, Point} from './common';
 import {gd} from './render';
 
@@ -59,6 +59,27 @@ for( let i = 0; i < 20; i ++ ){
 			angle:0,
 		};
 	}
+}
+
+let E_A_bulletC = Array(E_C_BULLET_NUM).fill(0);
+for( let i = 0; i < E_C_BULLET_NUM; i ++ ){
+	E_A_bulletC[i]={
+		x:0, y:0,
+		w:0, h:0,
+		type:0,
+		exist: 0,
+		px:0,
+		py:0,
+		A_delay:0,
+		p:[],
+		
+		vx:0,
+		vy:0,
+		vel:0,
+		gravity:0,
+		wind_force:0,
+		angle:0,
+	};
 }
 
 
@@ -257,5 +278,89 @@ export function enemy_bullet_move(){
 //炮塔子弹的产生
 //==============
 export function enemy_bullet_generateC(){
+	
+	for( let i = 0; i < E_D_NUM; i ++ ){
+		if(E_D[i].exist==1){
+			if( (E_D[i].generate_delay % 150 == 0) && (E_D[i].x<730) ){
+				for( let j = 0; j < E_C_BULLET_NUM; j ++ ){
+					if( E_A_bulletC[j].exist == 0 ){
+						E_A_bulletC[j].exist=1;
+						E_A_bulletC[j].angle         =Math.PI / 4;        //用于抛体
+						E_A_bulletC[j].vel           =6.0;
+						
+						if(E_D[i].L==1)
+							E_A_bulletC[j].x=E_D[i].x + 20;
+						else
+							E_A_bulletC[j].x=E_D[i].x + E_D[i].w - 40;
+						
+						E_A_bulletC[j].y=E_D[i].y + 5;
+						
+						const cos = Math.cos( E_A_bulletC[j].angle );
+						const sin = Math.sin( E_A_bulletC[j].angle );
+						if( E_D[i].L==1 ){
+							E_A_bulletC[j].vx=(-E_A_bulletC[j].vel) * cos; // 向左
+						}else{
+							E_A_bulletC[j].vx=(E_A_bulletC[j].vel) * cos; // 向右
+						}
+						
+						E_A_bulletC[j].vy=(-E_A_bulletC[j].vel) * sin;
+						
+						 E_A_bulletC[j].w			   =35;
+						 E_A_bulletC[j].h			   =35;
+
+						 E_A_bulletC[j].px			   =0;
+						 E_A_bulletC[j].py			   =0;
+						 E_A_bulletC[j].A_delay	       =0;
+						 
+						 E_A_bulletC[j].gravity       =0.05;     // gravity  重力
+						 E_A_bulletC[j].wind_force    =-0.01;    // wind resistance   风力
+						 break;
+					}
+					
+				} // for j over
+				E_D[i].generate_delay = 0;
+			}
+			E_D[i].generate_delay ++;
+		}
+	} // for i over
+	
+}
+
+//=============
+//炮塔子弹的移动
+//=============
+export function enemy_bullet_moveC(){
+	
+	for( let j = 0; j < E_C_BULLET_NUM; j ++ ){
+		
+		if(E_A_bulletC[j].exist==1){
+			E_A_bulletC[j].x=E_A_bulletC[j].x+E_A_bulletC[j].vx;
+			E_A_bulletC[j].y=E_A_bulletC[j].y+E_A_bulletC[j].vy;
+			
+			E_A_bulletC[j].vx+=E_A_bulletC[j].wind_force;
+			E_A_bulletC[j].vy+=E_A_bulletC[j].gravity;
+			
+			if(E_A_bulletC[j].x<0 || E_A_bulletC[j].y>600)
+		       E_A_bulletC[j].exist=0;
+		   
+		    //--动画的控制
+			if( E_A_bulletC[j].px < 525 ){
+				E_A_bulletC[j].px = E_A_bulletC[j].px + 35;
+			}else{
+				E_A_bulletC[j].px = 0;
+			}
+			
+			// 绘制图像 E_bullet_bitmap[1]
+			gd.drawImage(
+				config.E_bullet_bitmap[1],
+				E_A_bulletC[j].px,E_A_bulletC[j].py,
+				E_A_bulletC[j].w,E_A_bulletC[j].h,
+				E_A_bulletC[j].x,parseInt(E_A_bulletC[j].y),
+				E_A_bulletC[j].w,E_A_bulletC[j].h
+			);
+			
+		}
+		
+	} // for j over
 	
 }
