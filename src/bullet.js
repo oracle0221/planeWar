@@ -14,7 +14,11 @@ let p_bulletA = Array(BULLET0_NUM).fill({}).map(_=>({
 }));
 
 let generate_delay=0;			//常态子弹产生的延时
+let fast_generate_delay=0;		//加速子弹产生的延时
+let shotgun_generate_delay=0;	//散弹产生的延时
 
+export let MB_total=900;			//加速子弹的数量
+export let MB_total2=900;			//散弹的数量
 
 export async function bullet_bitmap_load(){
 	

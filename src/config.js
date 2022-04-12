@@ -29,4 +29,6 @@ export default {
 	// 敌人子弹图片
 	E_bullet_bitmap:[],
 	
+	// 角色状态图
+	R_state: [],
 };
