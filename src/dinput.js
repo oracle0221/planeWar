@@ -1,8 +1,12 @@
 import config from './config';
-import {bullet_generate} from './bullet';
+import {bullet_generate, MB_total, MB_total2, MB_total_minus, MB_total2_minus, fast_bullet_generate} from './bullet';
+import {wp} from './weapon';
+
 
 const DIK_LEFT = 37, DIK_RIGHT = 39, DIK_UP = 38, DIK_DOWN = 40; // 方向键 keycode
 const DIK_ENTER = 13; // 回车键
+const DIK_SPACE = 32; // 空格键
+const DIK_S = 83; // 飞机大子弹
 
 // 按键的松开状态
 let IsJust_DIK_UP = false, IsJust_DIK_DOWN = false;
@@ -33,6 +37,64 @@ document.onkeyup = ev =>{
 
 export function Dx_keyboard_control(){
 	const {p_3} = config;
+
+	// 飞机武器的切换(空格键)
+	if( keyCode == DIK_SPACE && wp.change_delay == 0 ){
+		wp.change_delay=1;
+		switch( wp.type ){
+			case 0:
+			wp.type = 1
+			wp.px = 0
+			break;
+			case 1:
+			wp.type = 2
+			wp.px = 0
+			break;
+			case 2:
+			wp.type = 3
+			wp.px = 0
+			break;
+			case 3:
+			wp.type = 1
+			wp.px = 0
+			break;
+		}
+	}
+	
+	// 武器切换延时
+	if( wp.change_delay > 0 ){
+		if( wp.change_delay % 20 == 0 ){
+			wp.change_delay = 0
+		}else{
+			wp.change_delay ++
+		}
+	}
+	
+	 //武器的子弹数量统计
+	if( keyCode ==  DIK_S ){
+		switch(wp.type){
+			case 1:
+			//加速子弹
+			if( MB_total > 0 ){
+				MB_total_minus();
+				if(wp.px<200)
+					wp.px=wp.px+wp.w;
+				else
+					wp.px=0;
+			}else{
+				wp.px = 0;
+			}
+			
+			fast_bullet_generate();	 //产生加速子弹
+			break;
+			case 2:
+			break;
+		}
+	}else{
+		// 键盘松开了, 武器重置状态
+		wp.px = 0;
+	}
+	
 	
 	// 选择角色
 	if( keyCode == DIK_LEFT ){

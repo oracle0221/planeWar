@@ -6,8 +6,9 @@ import {Generate_particle, particle_move} from './particle';
 import {plane1_move} from './plane';
 import {E_A_NUM, E_C_NUM, E_B_NUM, E_D_NUM, enemy_generate, enemy_move1,enemy_move3, enemy_explode, enemy_generate_C, enemy_move2, enemyC_explode, enemy_generate_B, enemy_generate_D, enemy_move4} from './enemy';
 import {enemy_bullet_generateB, enemy_bullet_moveB, enemy_bullet_moveC, enemy_bullet_generate, enemy_bullet_move, enemy_bullet_generateC} from './enemy_bullet';
-import {bullet1_move, plane_bullet_hit_enemy} from './bullet';
+import {bullet1_move, plane_bullet_hit_enemy, fast_bullet1_move} from './bullet';
 import {plane_state_display} from './plane_state';
+import {weapon_display} from './weapon'
 
 export const canvas = document.getElementById('game-canvas');
 export const gd = canvas.getContext('2d'); // 主画布画笔导出
@@ -121,6 +122,8 @@ export function draw(){
 			enemy_bullet_moveB(); //盾敌人散弹移动
 			enemy_bullet_move();	//盾敌人普通子弹的移动
 			
+			weapon_display();				//飞机武器的出现
+			
 			if( lim > 0.1 ){
 				limpid();
 			}else{
@@ -128,6 +131,7 @@ export function draw(){
 			}
 			
 			bullet1_move(); //飞机子弹的移动
+			fast_bullet1_move(); //加速子弹的移动
 			
 			//==飞机子弹击中敌人==//
 			plane_bullet_hit_enemy();

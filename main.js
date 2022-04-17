@@ -9,6 +9,7 @@ import {enemy_bitmap_load} from './src/enemy';
 import {enemy_bullet_bitmap_load} from './src/enemy_bullet';
 import {bullet_bitmap_load} from './src/bullet';
 import {plane_state_bitmap_load} from './src/plane_state';
+import {weapon_bitmap_load} from './src/weapon'
 
 async function create(){
 	
@@ -20,6 +21,7 @@ async function create(){
 	await enemy_bullet_bitmap_load();
 	await bullet_bitmap_load();
 	await plane_state_bitmap_load();
+	await weapon_bitmap_load();
 	
 	//--对象的产生--//
 	plane_generate();

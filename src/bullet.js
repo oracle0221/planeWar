@@ -2,12 +2,22 @@ import config from './config';
 import {E_A_NUM, E_A, E_C_NUM, E_C} from './enemy';
 import {loadImage, Point} from './common';
 import {gd} from './render';
+import {wp} from './weapon'
 
 export const BULLET0_NUM = 20;  // 常态子弹数量
+const FAST_BULLET0_NUM = 20    // 加速子弹数量
 
 let p_bulletA = Array(BULLET0_NUM).fill({}).map(_=>({
 	x:0, y:0,
 	w: 0, h:0, // 常态子弹宽与高
+	type: 0, 
+	exist:0, 
+	p:[{x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}],
+}));
+
+let p_fw_b = Array(BULLET0_NUM).fill({}).map(_=>({
+	x:0, y:0,
+	w: 0, h:0, // 加速子弹宽与高
 	type: 0, 
 	exist:0, 
 	p:[{x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}],
@@ -19,6 +29,14 @@ let shotgun_generate_delay=0;	//散弹产生的延时
 
 export let MB_total=900;			//加速子弹的数量
 export let MB_total2=900;			//散弹的数量
+
+export function MB_total_minus(){
+	MB_total --;
+}
+
+export function MB_total2_minus(){
+	MB_total2 --;
+}
 
 export async function bullet_bitmap_load(){
 	
@@ -189,4 +207,59 @@ export function plane_bullet_hit_enemy(){
 		
 	} // for i over
 	
+}
+
+//============
+//加速子弹产生
+//============
+export function fast_bullet_generate(){
+	let i = 0;
+	const {p_3} = config;
+	
+	if((MB_total>0)&&(wp.type==1)&&(fast_generate_delay%10==0)){
+		
+		for( let k = 0; k < FAST_BULLET0_NUM; k ++ ){
+			
+			if( p_fw_b[k].exist==0 ){
+				p_fw_b[k].exist=1;
+				p_fw_b[k].x=p_3[i].p_x+wp.w;
+				p_fw_b[k].y=p_3[i].p_y+wp.y+wp.h/2-5;
+				p_fw_b[k].w=49;
+				p_fw_b[k].h=27;
+				p_fw_b[k].type=2; // 代表加速子弹
+				break;
+			}
+			
+		} // for k over
+		
+	}
+	
+	if(fast_generate_delay<10)
+	   fast_generate_delay++;
+	else
+	   fast_generate_delay=1;
+	
+}
+
+//===============
+//加速子弹的移动
+//===============
+export function fast_bullet1_move(){
+	for( let k = 0; k < FAST_BULLET0_NUM; k ++ ){
+		
+		if(p_fw_b[k].exist==1){
+			if(p_fw_b[k].x<800){
+				p_fw_b[k].x=p_fw_b[k].x+5;
+				
+				gd.drawImage(
+					config.bullet_bitmap[1],
+					0,0,p_fw_b[k].w,p_fw_b[k].h,
+					p_fw_b[k].x,p_fw_b[k].y, p_fw_b[k].w,p_fw_b[k].h
+				);
+			}else{
+				p_fw_b[k].exist=0; // 子弹飞出边界了, exist置为0,从而生成后续的加速子弹
+			}
+		} // end if p_fw_b[k].exist==1
+		
+	} // for k over
 }

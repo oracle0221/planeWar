@@ -31,4 +31,7 @@ export default {
 	
 	// 角色状态图
 	R_state: [],
+	
+	// 武器图
+	W:[],
 };
