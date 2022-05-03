@@ -6,7 +6,7 @@ import {wp} from './weapon'
 
 export const BULLET0_NUM = 20;  // 常态子弹数量
 const FAST_BULLET0_NUM = 20    // 加速子弹数量
-const S_BULLET0_NUM_I = 6; // 散弹
+const S_BULLET0_NUM_I = 20; // 散弹
 const S_BULLET0_NUM_J = 3;
 
 let p_bulletA = Array(BULLET0_NUM).fill({}).map(_=>({
@@ -216,6 +216,42 @@ export function plane_bullet_hit_enemy(){
 		}
 		
 	} // for i over
+	
+	// 散弹与敌人相击
+	for( let j = 0; j < S_BULLET0_NUM_I; j ++){
+		for( let k = 0; k < S_BULLET0_NUM_J; k ++ ){
+			if(p_sw_b[j][k].exist==1){
+				
+				for( let g = 0; g < E_A_NUM; g ++ ){
+					if(E_A[g].exist==1){
+						
+						if( p_sw_b[j][k].x > E_A[g].x
+							&&
+							p_sw_b[j][k].x < E_A[g].x + E_A[g].w
+							&&
+							p_sw_b[j][k].y > E_A[g].y
+							&&
+							p_sw_b[j][k].y < E_A[g].y + E_A[g].h
+						){
+							E_A[g].exist=0;	
+							E_A[g].dead=1;	
+							p_sw_b[j][k].exist=0;
+          					config.E_A_count--;
+							config.core++;
+							break;
+						}
+						
+					}  //敌人存在
+					
+					if( p_sw_b[j][k].exist==0 ){
+						break;
+					}
+					
+				} // for g over
+				
+			} // if p_sw_b[j][k].exist==1
+		} // for k over
+	} // for j over
 	
 }
 
