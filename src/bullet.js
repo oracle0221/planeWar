@@ -6,6 +6,8 @@ import {wp} from './weapon'
 
 export const BULLET0_NUM = 20;  // 常态子弹数量
 const FAST_BULLET0_NUM = 20    // 加速子弹数量
+const S_BULLET0_NUM_I = 6; // 散弹
+const S_BULLET0_NUM_J = 3;
 
 let p_bulletA = Array(BULLET0_NUM).fill({}).map(_=>({
 	x:0, y:0,
@@ -22,6 +24,14 @@ let p_fw_b = Array(BULLET0_NUM).fill({}).map(_=>({
 	exist:0, 
 	p:[{x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}],
 }));
+
+let p_sw_b = Array( S_BULLET0_NUM_I ).fill([]).map(_=>Array(S_BULLET0_NUM_J).fill([]).map(_=>({
+	x:0, y:0,
+	w: 0, h:0, // 散弹宽与高
+	type: 0, 
+	exist:0, 
+	p:[{x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}, {x:0, y:0}],
+})));
 
 let generate_delay=0;			//常态子弹产生的延时
 let fast_generate_delay=0;		//加速子弹产生的延时
@@ -262,4 +272,94 @@ export function fast_bullet1_move(){
 		} // end if p_fw_b[k].exist==1
 		
 	} // for k over
+}
+
+//============
+//散弹产生
+//============
+export function shotgun_bullet_generate(){
+	let three_ok = 0; //标识现在找到3颗不存在子弹
+	let i = 0;
+	
+	if( ( MB_total2 > 0 ) && ( wp.type == 2 ) && (shotgun_generate_delay % 60 == 0) ){
+		for( let j = 0; j < S_BULLET0_NUM_I; j ++ ){
+			for( let k = 0; k < S_BULLET0_NUM_J; k ++ ){
+				if(p_sw_b[j][k].exist==0){
+					//确保这一行中有3个空位
+					three_ok ++;
+				} 
+			} // for k over
+			
+			if( three_ok >= 3 ){
+				for( let k = 0; k < 3; k ++ ){
+					p_sw_b[j][k].exist=1;
+					p_sw_b[j][k].x=config.p_3[i].p_x+wp.w;
+					p_sw_b[j][k].y=config.p_3[i].p_y+wp.y+wp.h/2-10;
+					p_sw_b[j][k].w=40;
+					p_sw_b[j][k].h=25;
+					p_sw_b[j][k].type=3;
+				} // for k over
+				break;
+			}
+			
+			three_ok = 0;
+			
+			
+		} // for j over
+	}
+	
+	if( shotgun_generate_delay < 60 ){
+		shotgun_generate_delay ++;
+	}else{
+		shotgun_generate_delay = 1;
+	}
+}
+
+//============
+//散弹移动
+//============
+export function shotgun_bullet_move(){
+	let xx = 0, yy = 0; //决定出现那一个散弹图
+	
+	for( let i = 0; i < S_BULLET0_NUM_I; i ++ ){
+		for( let j = 0; j < S_BULLET0_NUM_J; j ++ ){
+			if(p_sw_b[i][j].exist==1){
+				// j: 决定子弹的方向
+				switch( j ){
+					case 0:
+						p_sw_b[i][j].x=p_sw_b[i][j].x+2;
+						p_sw_b[i][j].y=p_sw_b[i][j].y-1;
+						xx=0;
+					break;
+					case 1:
+						p_sw_b[i][j].x=p_sw_b[i][j].x+2;
+						xx=40;
+					break;
+					case 2:
+						p_sw_b[i][j].x=p_sw_b[i][j].x+2;
+						p_sw_b[i][j].y=p_sw_b[i][j].y+1;
+						xx=80;
+					break;
+				}
+				
+				if( p_sw_b[i][j].x >= 700 
+					||
+					p_sw_b[i][j].y < 100
+					||
+					p_sw_b[i][j].y > 500
+				){
+					p_sw_b[i][j].exist = 0;
+				}
+				
+				// 绘制
+				gd.drawImage(
+					config.bullet_bitmap[2],
+					xx, yy, p_sw_b[i][j].w,p_sw_b[i][j].h,
+					p_sw_b[i][j].x,p_sw_b[i][j].y,
+					p_sw_b[i][j].w,p_sw_b[i][j].h
+				);
+			}
+		} // for j over
+	}// for i over
+	
 }

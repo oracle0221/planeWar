@@ -1,5 +1,5 @@
 import config from './config';
-import {bullet_generate, MB_total, MB_total2, MB_total_minus, MB_total2_minus, fast_bullet_generate} from './bullet';
+import {bullet_generate, MB_total, MB_total2, MB_total_minus, MB_total2_minus, fast_bullet_generate, shotgun_bullet_generate} from './bullet';
 import {wp} from './weapon';
 
 
@@ -88,6 +88,19 @@ export function Dx_keyboard_control(){
 			fast_bullet_generate();	 //产生加速子弹
 			break;
 			case 2:
+				// 散弹
+				if( MB_total2 > 0 ){
+					MB_total2_minus();
+					if( wp.px < 75 ){
+						wp.px = wp.px + wp.w;
+					}else{
+						wp.px = 0;
+					}
+				}else{
+					wp.px = 0;
+				}
+				
+				shotgun_bullet_generate(); // 产生散弹
 			break;
 		}
 	}else{
